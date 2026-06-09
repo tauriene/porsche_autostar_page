@@ -1,1275 +1,445 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Porsche Service — Премиальный автосервис</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      /* ─── TOKENS ─────────────────────────────────────────────── */
-      :root {
-        --bg:           #050505;
-        --text-main:    #fff;
-        --text-muted:   rgba(255, 255, 255, 0.6);
-        --text-soft:    rgba(255, 255, 255, 0.42);
-        --line-subtle:  rgba(255, 255, 255, 0.07);
-        --line-mid:     rgba(255, 255, 255, 0.12);
-        --accent:       #fff;
-      }
-      /* ─── SCROLL REVEAL ──────────────────────────────────────── */
-      .scroll-img-hidden {
-        opacity: 0;
-      }
-      .stats-photo.scroll-img-hidden {
-        transform: scale(1.05);
-      }
 
-      /* ─── RESET ──────────────────────────────────────────────── */
-      *, *::before, *::after { box-sizing: border-box; }
-      html, body { width: 100%; margin: 0; }
-      body {
-        background: var(--bg);
-        color: var(--text-main);
-        font-family: "Inter", sans-serif;
-        overflow-x: hidden;
-      }
-      a { color: inherit; text-decoration: none; }
-
-      .cookie-banner {
-        position: fixed;
-        left: 24px;
-        right: 24px;
-        bottom: 24px;
-        z-index: 120;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        padding: 18px 20px;
-        border: 1px solid rgba(255,255,255,0.12);
-        background: rgba(5,5,5,0.92);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        box-shadow: 0 18px 60px rgba(0,0,0,0.45);
-      }
-
-      .cookie-banner[hidden] { display: none; }
-
-      .cookie-copy {
-        max-width: 760px;
-      }
-
-      .cookie-title {
-        margin: 0 0 6px;
-        font-family: "Cormorant Garamond", serif;
-        font-size: 24px;
-        font-weight: 400;
-        letter-spacing: 0.02em;
-      }
-
-      .cookie-text {
-        margin: 0;
-        font-size: 13px;
-        line-height: 1.6;
-        color: var(--text-soft);
-      }
-
-      .cookie-actions {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-shrink: 0;
-      }
-
-      .cookie-btn {
-        border: 1px solid rgba(255,255,255,0.18);
-        background: transparent;
-        color: #fff;
-        padding: 12px 18px;
-        font-family: "Inter", sans-serif;
-        font-size: 11px;
-        font-weight: 500;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
-      }
-
-      .cookie-btn:hover {
-        transform: translateY(-1px);
-      }
-
-      .cookie-btn.primary {
-        background: #fff;
-        color: #050505;
-        border-color: #fff;
-      }
-
-      .cookie-btn.primary:hover {
-        background: rgba(255,255,255,0.88);
-      }
-
-      .cookie-btn.secondary:hover {
-        border-color: rgba(255,255,255,0.45);
-      }
-
-      .brand-mark {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 19px;
-        font-weight: 400;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-      }
-
-      /* ─── HERO ───────────────────────────────────────────────── */
-      .hero {
-        min-height: 100vh;
-        position: relative;
-        overflow: hidden;
-        background: #000;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-      }
-
-      .hero-photo {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: grayscale(100%) contrast(1.1);
-      }
-
-      .hero::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(to right, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.6) 45%, transparent 75%),
-          linear-gradient(to bottom, transparent 46%, rgba(5,5,5,0.72) 72%, rgba(5,5,5,0.96) 92%, #050505 100%);
-        z-index: 1;
-        pointer-events: none;
-      }
-
-      .hero::after {
-        content: "";
-        position: absolute;
-        left: 0; right: 0; bottom: 0;
-        height: 26svh;
-        background: linear-gradient(to bottom, rgba(5,5,5,0) 0%, rgba(5,5,5,0.78) 52%, #050505 84%, #050505 100%);
-        z-index: 1;
-        pointer-events: none;
-      }
-
-      .hero-center-art {
-        position: absolute;
-        left: 50%;
-        top: 39%;
-        transform: translate(-50%, -50%);
-        z-index: 2;
-        width: min(72vw, 980px);
-        max-width: 50%;
-        height: auto;
-        opacity: 0.4;
-        display: block;
-        pointer-events: none;
-        user-select: none;
-      }
-
-      .hero-content {
-        position: relative;
-        z-index: 3;
-        padding: 0 64px 80px;
-        max-width: 600px;
-      }
-
-      .hero-title {
-        margin: 0 0 28px;
-        font-family: "Cormorant Garamond", serif;
-        font-size: 76px;
-        font-weight: 300;
-        line-height: 0.92;
-        letter-spacing: -0.02em;
-      }
-
-      .hero-title em {
-        font-style: italic;
-        color: rgba(255,255,255,0.58);
-      }
-
-      .hero-subtitle {
-        margin: 0 0 48px;
-        max-width: 400px;
-        font-size: 13px;
-        font-weight: 300;
-        line-height: 1.9;
-        color: var(--text-soft);
-      }
-
-      .hero-actions {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-
-      .hero-btn {
-        display: inline-block;
-        padding: 15px 38px;
-        font-size: 11px;
-        font-weight: 500;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        border: 1px solid transparent;
-        transition: color 200ms ease, border-color 200ms ease, background 200ms ease, transform 200ms ease;
-      }
-
-      /* PRIMARY — исправлен hover */
-      .hero-btn.primary {
-        background: #fff;
-        color: #050505;
-      }
-      .hero-btn.primary:hover {
-        background: rgba(255,255,255,0.88);
-        transform: translateY(-1px);
-      }
-      .hero-btn.primary:active {
-        transform: translateY(0);
-      }
-
-      .hero-btn.secondary {
-        background: transparent;
-        color: var(--text-muted);
-        border-color: rgba(255,255,255,0.2);
-      }
-      .hero-btn.secondary:hover {
-        color: #fff;
-        border-color: #fff;
-        transform: translateY(-1px);
-      }
-
-      /* ─── STATS SCREEN (бывший пустой second-screen) ─────────── */
-      .stats-screen {
-        position: relative;
-        z-index: 2;
-        overflow: hidden;
-        background: #000;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      .stats-photo {
-        position: absolute;
-        inset: 0;
-        z-index: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: grayscale(100%) contrast(1.1);
-        transition: transform 1.2s cubic-bezier(0.22,1,0.36,1), opacity 1.2s ease-out;
-      }
-
-      /* тот же оверлей что был */
-      .stats-screen::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(to bottom,
-            #050505 0%,
-            rgba(5,5,5,0.94) 12%,
-            rgba(0,0,0,0.52) 38%,
-            rgba(0,0,0,0.52) 62%,
-            rgba(5,5,5,0.94) 86%,
-            #050505 100%
-          ),
-          linear-gradient(to right, rgba(0,0,0,0.55) 0%, transparent 55%);
-        z-index: 1;
-        pointer-events: none;
-      }
-
-      /* контент поверх фото */
-      .stats-inner {
-        position: relative;
-        z-index: 2;
-        padding: 0 64px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        max-width: 640px;
-        gap: 64px;
-      }
-
-      .stats-label {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-
-      .stats-label-line {
-        width: 28px;
-        height: 1px;
-        background: rgba(255,255,255,0.4);
-        flex-shrink: 0;
-      }
-
-      .stats-label-text {
-        font-size: 10px;
-        font-weight: 400;
-        letter-spacing: 0.38em;
-        text-transform: uppercase;
-        color: var(--text-soft);
-      }
-
-      .stats-quote {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 42px;
-        font-weight: 300;
-        font-style: italic;
-        line-height: 1.18;
-        letter-spacing: -0.01em;
-        color: rgba(255,255,255,0.9);
-        margin: 0;
-      }
-
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0;
-        border-top: 1px solid var(--line-subtle);
-      }
-
-      .stat-item {
-        padding: 28px 0;
-        border-right: 1px solid var(--line-subtle);
-        padding-right: 28px;
-      }
-      .stat-item:first-child {
-        padding-left: 0;
-      }
-      .stat-item:last-child {
-        border-right: none;
-        padding-left: 28px;
-        padding-right: 0;
-      }
-      .stat-item:nth-child(2) {
-        padding-left: 28px;
-        padding-right: 28px;
-      }
-
-      .stat-number {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 52px;
-        font-weight: 300;
-        line-height: 1;
-        letter-spacing: -0.02em;
-        color: #fff;
-      }
-
-      .stat-unit {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 28px;
-        font-weight: 300;
-        color: rgba(255,255,255,0.5);
-        margin-left: 2px;
-      }
-
-      .stat-label {
-        margin-top: 8px;
-        font-size: 10px;
-        font-weight: 400;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--text-soft);
-      }
-
-      /* ─── CAR SECTION ────────────────────────────────────────── */
-      .my-car {
-        display: grid;
-        grid-template-columns: 64fr 36fr;
-        min-height: 100vh;
-        position: relative;
-        z-index: 3;
-        background: #050505;
-        align-items: center;
-      }
-
-      .my-car::before {
-        content: "";
-        position: absolute;
-        left: 0; right: 0; top: 0;
-        height: 24svh;
-        background: linear-gradient(to bottom, #050505 0%, rgba(5,5,5,0) 100%);
-        pointer-events: none;
-      }
-
-      .car-visual {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 3vw;
-        position: relative;
-        z-index: 1;
-        --car-parallax-x: 0px;
-        --car-parallax-y: 0px;
-      }
-
-      .car-visual::after {
-        content: "";
-        position: absolute;
-        width: min(82%, 920px);
-        height: 110px;
-        left: 50%;
-        bottom: calc(50% - 170px);
-        transform: translateX(-50%);
-        background: radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0) 100%);
-        filter: blur(16px);
-        pointer-events: none;
-      }
-
-      .car-showroom-shell {
-        position: relative;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 24px;
-      }
-
-      .car-showroom {
-        width: 100%;
-        display: flex;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        padding: 0;
-        gap: 0;
-        cursor: grab;
-        scrollbar-width: none;
-        touch-action: pan-x;
-      }
-      .car-showroom::-webkit-scrollbar { display: none; }
-      .car-showroom.is-dragging { cursor: grabbing; }
-
-      .car-slide {
-        flex: 0 0 100%;
-        scroll-snap-align: center;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 68vh;
-        transition: transform 900ms cubic-bezier(0.22,1,0.36,1), filter 820ms ease, opacity 820ms ease;
-        transform: scale(0.86) translateY(10px);
-        filter: grayscale(38%) brightness(0.24) blur(1.2px);
-        opacity: 0.34;
-      }
-
-      .car-slide::after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        bottom: 10%;
-        width: 70%;
-        height: 62px;
-        transform: translateX(-50%);
-        background: radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.56) 62%, rgba(0,0,0,0) 100%);
-        filter: blur(14px);
-        pointer-events: none;
-      }
-
-      .car-slide.is-active {
-        transform: scale(1) translateY(0);
-        filter: grayscale(8%) brightness(1) blur(0);
-        opacity: 1;
-      }
-
-      .car-image {
-        --model-scale: 1;
-        width: min(1080px, 100%);
-        max-height: 68vh;
-        object-fit: contain;
-        object-position: center;
-        filter: drop-shadow(0 24px 46px rgba(0,0,0,0.5));
-        transform: translate3d(var(--car-parallax-x), var(--car-parallax-y), 0) scale(var(--model-scale));
-        transition: transform 900ms cubic-bezier(0.22,1,0.36,1), opacity 1000ms ease-out;
-      }
-
-      .car-slide[data-model="taycan"] .car-image  { --model-scale: 1.08; }
-      .car-slide[data-model="turbo"] .car-image   { --model-scale: 0.98; }
-      .car-slide[data-model="panamera"] .car-image { --model-scale: 1.04; }
-
-      /* nav — SVG-шевроны вместо ←→ */
-      .showroom-nav {
-        position: absolute;
-        left: 50%;
-        bottom: 6px;
-        transform: translateX(-50%);
-        z-index: 3;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .showroom-arrow {
-        width: 44px;
-        height: 44px;
-        border: 1px solid rgba(255,255,255,0.14);
-        background: rgba(255,255,255,0.05);
-        color: rgba(255,255,255,0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
-      }
-
-      .showroom-arrow svg {
-        width: 14px;
-        height: 14px;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 1.5;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-
-      .showroom-arrow:hover {
-        background: rgba(255,255,255,0.1);
-        border-color: rgba(255,255,255,0.3);
-        color: #fff;
-        transform: translateY(-1px);
-      }
-
-      .showroom-arrow:disabled {
-        opacity: 0.25;
-        cursor: not-allowed;
-        transform: none;
-        pointer-events: none;
-      }
-
-      /* car info panel — добавлен border-left */
-      .car-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 64px 64px 64px 52px;
-        position: relative;
-        z-index: 1;
-        border-left: 1px solid var(--line-subtle);
-        min-height: 100vh;
-      }
-
-      .car-eyebrow {
-        margin: 0 0 20px;
-        font-size: 10px;
-        font-weight: 400;
-        letter-spacing: 0.44em;
-        text-transform: uppercase;
-        color: var(--text-soft);
-      }
-
-      .car-model-title {
-        margin: 0;
-        font-family: "Cormorant Garamond", serif;
-        font-size: 78px;
-        font-weight: 300;
-        line-height: 0.9;
-        color: #fff;
-        white-space: pre-line;
-        transition: opacity 320ms ease, transform 420ms cubic-bezier(0.19,1,0.22,1);
-      }
-
-      .car-model-subtitle {
-        margin: 30px 0 0;
-        font-size: 11px;
-        font-weight: 400;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: rgba(255,255,255,0.38);
-        transition: opacity 320ms ease, transform 420ms cubic-bezier(0.19,1,0.22,1);
-      }
-
-      .car-divider {
-        margin: 36px 0;
-        width: 36px;
-        height: 1px;
-        background: rgba(255,255,255,0.18);
-      }
-
-      .car-features {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 4px;
-      }
-
-      .car-feature {
-        font-size: 11px;
-        font-weight: 300;
-        letter-spacing: 0.06em;
-        color: var(--text-soft);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .car-feature::before {
-        content: "";
-        display: inline-block;
-        width: 4px;
-        height: 4px;
-        background: rgba(255,255,255,0.28);
-        flex-shrink: 0;
-      }
-
-      .select-model-btn {
-        margin-top: 44px;
-        border: 1px solid rgba(255,255,255,0.2);
-        background: transparent;
-        color: #fff;
-        font-family: "Inter", sans-serif;
-        font-size: 10px;
-        font-weight: 500;
-        letter-spacing: 0.26em;
-        text-transform: uppercase;
-        padding: 14px 32px;
-        cursor: pointer;
-        width: fit-content;
-        transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
-      }
-      .select-model-btn:hover {
-        background: rgba(255,255,255,0.07);
-        border-color: rgba(255,255,255,0.4);
-        transform: translateY(-1px);
-      }
-
-      .model-switch-fade {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-
-      /* ─── SERVICES STRIP ─────────────────────────────────────── */
-      .services-strip {
-        position: relative;
-        z-index: 3;
-        background: #050505;
-        border-top: 1px solid var(--line-subtle);
-        padding: 80px 64px 96px;
-      }
-
-      .section-eyebrow {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-bottom: 56px;
-      }
-
-      .section-eyebrow-line {
-        width: 28px;
-        height: 1px;
-        background: rgba(255,255,255,0.35);
-        flex-shrink: 0;
-      }
-
-      .section-eyebrow-text {
-        font-size: 10px;
-        font-weight: 400;
-        letter-spacing: 0.38em;
-        text-transform: uppercase;
-        color: var(--text-soft);
-      }
-
-      .services-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        border-left: 1px solid var(--line-subtle);
-      }
-
-      .service-card {
-        padding: 36px 32px 40px;
-        border-right: 1px solid var(--line-subtle);
-        border-bottom: 1px solid var(--line-subtle);
-        transition: background 220ms ease;
-        cursor: default;
-      }
-
-      .service-card:hover {
-        background: rgba(255,255,255,0.025);
-      }
-
-      .service-num {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 13px;
-        font-weight: 300;
-        color: rgba(255,255,255,0.22);
-        letter-spacing: 0.1em;
-        margin-bottom: 24px;
-        display: block;
-      }
-
-      .service-name {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 26px;
-        font-weight: 300;
-        line-height: 1.2;
-        color: #fff;
-        margin: 0 0 14px;
-      }
-
-      .service-desc {
-        font-size: 12px;
-        font-weight: 300;
-        line-height: 1.8;
-        color: var(--text-soft);
-        margin: 0;
-      }
-
-      /* ─── FOOTER ─────────────────────────────────────────────── */
-      .site-footer {
-        position: relative;
-        z-index: 3;
-        background: #050505;
-        border-top: 1px solid var(--line-subtle);
-        padding: 52px 64px;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 40px;
-        align-items: start;
-      }
-
-      .footer-brand .brand-mark {
-        font-size: 20px;
-        letter-spacing: 0.24em;
-        display: block;
-        margin-bottom: 14px;
-      }
-
-      .footer-tagline {
-        font-size: 11px;
-        font-weight: 300;
-        color: var(--text-soft);
-        letter-spacing: 0.04em;
-        line-height: 1.7;
-      }
-
-      .footer-col-title {
-        font-size: 9px;
-        font-weight: 500;
-        letter-spacing: 0.32em;
-        text-transform: uppercase;
-        color: rgba(255,255,255,0.28);
-        margin: 0 0 18px;
-      }
-
-      .footer-links {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .footer-links a {
-        font-size: 12px;
-        font-weight: 300;
-        color: var(--text-soft);
-        letter-spacing: 0.03em;
-        transition: color 180ms ease;
-      }
-      .footer-links a:hover { color: #fff; }
-
-      .footer-contact-block {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-
-      .footer-phone {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 28px;
-        font-weight: 300;
-        color: #fff;
-        letter-spacing: 0.02em;
-        transition: opacity 180ms ease;
-      }
-      .footer-phone:hover { opacity: 0.7; }
-
-      .footer-address {
-        font-size: 11px;
-        font-weight: 300;
-        color: var(--text-soft);
-        line-height: 1.7;
-        margin-top: 8px;
-      }
-
-      .footer-bottom {
-        position: relative;
-        z-index: 3;
-        background: #050505;
-        border-top: 1px solid var(--line-subtle);
-        padding: 20px 64px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .footer-copy {
-        font-size: 10px;
-        font-weight: 300;
-        color: rgba(255,255,255,0.22);
-        letter-spacing: 0.06em;
-      }
-
-      /* ─── RESPONSIVE ─────────────────────────────────────────── */
-      @media (max-width: 960px) {
-        .hero-content { padding: 0 24px 56px; max-width: 100%; }
-        .hero-title { font-size: 52px; }
-        .hero-actions { flex-wrap: wrap; }
-        .hero-center-art {
-          top: 39%;
-          width: min(90vw, 560px);
-          opacity: 0.5;
-        }
-
-        .cookie-banner {
-          left: 16px;
-          right: 16px;
-          bottom: 16px;
-          padding: 16px;
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .cookie-actions {
-          width: 100%;
-        }
-
-        .cookie-btn {
-          flex: 1;
-        }
-
-        .stats-inner { padding: 0 24px; gap: 40px; }
-        .stats-quote { font-size: 30px; }
-        .stats-grid { grid-template-columns: 1fr; border-top: 1px solid var(--line-subtle); }
-        .stat-item {
-          border-right: none;
-          border-bottom: 1px solid var(--line-subtle);
-          padding: 20px 0 !important;
-        }
-
-        .my-car {
-          grid-template-columns: 1fr;
-        }
-
-        .car-visual { padding: 76px 16px 20px; justify-content: center; }
-        .car-showroom { padding: 0; }
-        .car-slide { flex-basis: 100%; min-height: 52vh; }
-        .car-image { width: min(820px, 100%); max-height: 52vh; }
-
-        .car-info {
-          padding: 28px 24px 52px;
-          border-left: none;
-          border-top: 1px solid var(--line-subtle);
-          min-height: unset;
-        }
-        .car-model-title { font-size: 54px; }
-
-        .services-strip { padding: 56px 24px 72px; }
-        .services-grid { grid-template-columns: 1fr 1fr; }
-
-        .site-footer {
-          grid-template-columns: 1fr;
-          padding: 44px 24px;
-          gap: 36px;
-        }
-
-        .footer-bottom { padding: 18px 24px; flex-direction: column; gap: 8px; text-align: center; }
-      }
-
-      @media (max-width: 540px) {
-        .services-grid { grid-template-columns: 1fr; }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Согласие на cookies">
-      <div class="cookie-copy">
-        <p class="cookie-title">Согласие на cookies</p>
-        <p class="cookie-text">Визуальная заглушка для демонстрации согласия на cookie. Никакие данные не сохраняются.</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porsche Service — Премиальный автосервис</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="./style.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Согласие на cookies">
+    <div class="cookie-copy">
+      <p class="cookie-title">Согласие на cookies</p>
+      <p class="cookie-text">Визуальная заглушка для демонстрации согласия на cookie. Никакие данные не сохраняются.</p>
+    </div>
+    <div class="cookie-actions">
+      <button class="cookie-btn secondary" id="cookieReject" type="button">Отклонить</button>
+      <button class="cookie-btn primary" id="cookieAccept" type="button">Согласиться</button>
+    </div>
+  </div>
+
+  <div class="noise-overlay"></div>
+  <div class="ambient-glow"></div>
+
+  <!-- ─── HERO ─────────────────────────────────────────── -->
+  <section class="hero">
+    <img class="hero-photo" src="./images/main_landing_page.png" alt="Porsche в студийном освещении" />
+    <img class="hero-center-art" src="./images/porsche_service_text.png" alt="Porsche Service" />
+    <div class="hero-content reveal-up">
+      <h1 class="hero-title">
+        Без<br>
+        <em>компромиссов</em><br>
+        в деталях
+      </h1>
+      <p class="hero-subtitle">
+        Точный регламент Porsche, инженерная диагностика и персональный контроль каждого этапа обслуживания вашего
+        автомобиля.
+      </p>
+      <div class="hero-actions">
+        <a href="#" class="hero-btn primary">Записаться на сервис</a>
+        <a href="#" class="hero-btn secondary">Все услуги</a>
       </div>
-      <div class="cookie-actions">
-        <button class="cookie-btn secondary" id="cookieReject" type="button">Отклонить</button>
-        <button class="cookie-btn primary" id="cookieAccept" type="button">Согласиться</button>
+    </div>
+  </section>
+
+  <!-- ─── STATS SCREEN (раньше пустой second-screen) ───── -->
+  <section class="stats-screen">
+    <img class="stats-photo" src="./images/second_page.png" alt="Детали обслуживания Porsche" />
+    <div class="stats-inner">
+      <div class="stats-label reveal-up">
+        <span class="stats-label-line" aria-hidden="true"></span>
+        <span class="stats-label-text">Точность — наш стандарт</span>
+      </div>
+
+      <blockquote class="stats-quote reveal-up" style="transition-delay: 100ms;">
+        «Каждый Porsche — это инженерное решение.<br>
+        Мы обслуживаем его именно так»
+      </blockquote>
+
+      <div class="stats-grid reveal-up" style="transition-delay: 200ms;">
+        <div class="stat-item">
+          <div class="stat-number" data-target="14">0<span class="stat-unit">лет</span></div>
+          <div class="stat-label">Опыта в работе с Porsche</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="2400">0<span class="stat-unit">+</span></div>
+          <div class="stat-label">Довольных клиентов</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="100">0<span class="stat-unit">%</span></div>
+          <div class="stat-label">Оригинальные запчасти</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CAR SHOWROOM ──────────────────────────────────── -->
+  <section class="my-car" id="your-car">
+    <div class="car-visual">
+      <div class="car-showroom-shell">
+        <div class="car-showroom" id="carShowroom" aria-label="Лента моделей">
+          <article class="car-slide is-active" data-model="taycan">
+            <img class="car-image" src="./images/taycan_sboku.png" alt="Porsche Taycan" />
+          </article>
+          <article class="car-slide" data-model="turbo">
+            <img class="car-image" src="./images/turbos_sboku.png" alt="Porsche 911 Turbo S" />
+          </article>
+          <article class="car-slide" data-model="panamera">
+            <img class="car-image" src="./images/panamera_sboku.png" alt="Porsche Panamera" />
+          </article>
+        </div>
+        <div class="showroom-nav" aria-label="Навигация по моделям">
+          <!-- SVG-шевроны вместо HTML-символов ← → -->
+          <button class="showroom-arrow" id="showroomPrev" type="button" aria-label="Предыдущая модель">
+            <svg viewBox="0 0 14 14">
+              <polyline points="9,2 4,7 9,12" />
+            </svg>
+          </button>
+          <button class="showroom-arrow" id="showroomNext" type="button" aria-label="Следующая модель">
+            <svg viewBox="0 0 14 14">
+              <polyline points="5,2 10,7 5,12" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- ─── HERO ─────────────────────────────────────────── -->
-    <section class="hero">
-      <img
-        class="hero-photo"
-        src="./main_landing_page.png"
-        alt="Porsche в студийном освещении"
-      />
-      <img
-        class="hero-center-art"
-        src="./porsche_service_text.png"
-        alt="Porsche Service"
-      />
-      <div class="hero-content">
-        <h1 class="hero-title">
-          Без<br>
-          <em>компромиссов</em><br>
-          в деталях
-        </h1>
-        <p class="hero-subtitle">
-          Точный регламент Porsche, инженерная диагностика и персональный контроль каждого этапа обслуживания вашего автомобиля.
-        </p>
-        <div class="hero-actions">
-          <a href="#" class="hero-btn primary">Записаться на сервис</a>
-          <a href="#" class="hero-btn secondary">Все услуги</a>
-        </div>
+    <div class="car-info">
+      <p class="car-eyebrow">Выбор вашего авто</p>
+      <h2 class="car-model-title" id="carTitle">Porsche
+        Taycan</h2>
+      <p class="car-model-subtitle" id="carSubtitle">Электро · Полный привод</p>
+
+      <div class="car-divider"></div>
+
+      <ul class="car-features" id="carFeatures">
+        <li class="car-feature">Диагностика электропривода</li>
+        <li class="car-feature">Обновление программного обеспечения</li>
+        <li class="car-feature">Обслуживание тормозной системы</li>
+      </ul>
+
+      <button class="select-model-btn" type="button">Выбрать модель</button>
+    </div>
+  </section>
+
+  <!-- ─── SERVICES ──────────────────────────────────────── -->
+  <section class="services-strip">
+    <div class="section-eyebrow reveal-up">
+      <span class="section-eyebrow-line" aria-hidden="true"></span>
+      <span class="section-eyebrow-text">Наши услуги</span>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal-up" style="transition-delay: 0ms;">
+        <span class="service-num">01</span>
+        <h3 class="service-name">Плановое ТО</h3>
+        <p class="service-desc">Регламентное обслуживание по стандартам Porsche AG с использованием оригинальных
+          материалов.</p>
       </div>
-    </section>
-
-    <!-- ─── STATS SCREEN (раньше пустой second-screen) ───── -->
-    <section class="stats-screen">
-      <img
-        class="stats-photo"
-        src="./second_page.png"
-        alt="Детали обслуживания Porsche"
-      />
-      <div class="stats-inner">
-        <div class="stats-label">
-          <span class="stats-label-line" aria-hidden="true"></span>
-          <span class="stats-label-text">Точность — наш стандарт</span>
-        </div>
-
-        <blockquote class="stats-quote">
-          «Каждый Porsche — это инженерное решение.<br>
-          Мы обслуживаем его именно так»
-        </blockquote>
-
-        <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-number">14<span class="stat-unit">лет</span></div>
-            <div class="stat-label">Опыта в работе с Porsche</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">2400<span class="stat-unit">+</span></div>
-            <div class="stat-label">Довольных клиентов</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">100<span class="stat-unit">%</span></div>
-            <div class="stat-label">Оригинальные запчасти</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── CAR SHOWROOM ──────────────────────────────────── -->
-    <section class="my-car" id="your-car">
-      <div class="car-visual">
-        <div class="car-showroom-shell">
-          <div class="car-showroom" id="carShowroom" aria-label="Лента моделей">
-            <article class="car-slide is-active" data-model="taycan">
-              <img class="car-image" src="./taycan_sboku.png" alt="Porsche Taycan" />
-            </article>
-            <article class="car-slide" data-model="turbo">
-              <img class="car-image" src="./turbos_sboku.png" alt="Porsche 911 Turbo S" />
-            </article>
-            <article class="car-slide" data-model="panamera">
-              <img class="car-image" src="./panamera_sboku.png" alt="Porsche Panamera" />
-            </article>
-          </div>
-          <div class="showroom-nav" aria-label="Навигация по моделям">
-            <!-- SVG-шевроны вместо HTML-символов ← → -->
-            <button class="showroom-arrow" id="showroomPrev" type="button" aria-label="Предыдущая модель">
-              <svg viewBox="0 0 14 14"><polyline points="9,2 4,7 9,12"/></svg>
-            </button>
-            <button class="showroom-arrow" id="showroomNext" type="button" aria-label="Следующая модель">
-              <svg viewBox="0 0 14 14"><polyline points="5,2 10,7 5,12"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="car-info">
-        <p class="car-eyebrow">Выбор вашего авто</p>
-        <h2 class="car-model-title" id="carTitle">Porsche
-Taycan</h2>
-        <p class="car-model-subtitle" id="carSubtitle">Электро · Полный привод</p>
-
-        <div class="car-divider"></div>
-
-        <ul class="car-features" id="carFeatures">
-          <li class="car-feature">Диагностика электропривода</li>
-          <li class="car-feature">Обновление программного обеспечения</li>
-          <li class="car-feature">Обслуживание тормозной системы</li>
-        </ul>
-
-        <button class="select-model-btn" type="button">Выбрать модель</button>
-      </div>
-    </section>
-
-    <!-- ─── SERVICES ──────────────────────────────────────── -->
-    <section class="services-strip">
-      <div class="section-eyebrow">
-        <span class="section-eyebrow-line" aria-hidden="true"></span>
-        <span class="section-eyebrow-text">Наши услуги</span>
-      </div>
-      <div class="services-grid">
-        <div class="service-card">
-          <span class="service-num">01</span>
-          <h3 class="service-name">Плановое ТО</h3>
-          <p class="service-desc">Регламентное обслуживание по стандартам Porsche AG с использованием оригинальных материалов.</p>
-        </div>
-        <div class="service-card">
-          <span class="service-num">02</span>
-          <h3 class="service-name">Диагностика</h3>
-          <p class="service-desc">Полная компьютерная диагностика всех систем автомобиля на фирменном оборудовании PIWIS.</p>
-        </div>
-        <div class="service-card">
-          <span class="service-num">03</span>
-          <h3 class="service-name">Двигатель и&nbsp;трансмиссия</h3>
-          <p class="service-desc">Капитальный и текущий ремонт двигателей, КПП PDK, а также систем полного привода PTM.</p>
-        </div>
-        <div class="service-card">
-          <span class="service-num">04</span>
-          <h3 class="service-name">Кузов и&nbsp;детейлинг</h3>
-          <p class="service-desc">Покраска, полировка, нанесение керамического покрытия и защитных плёнок PPF класса люкс.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── FOOTER ────────────────────────────────────────── -->
-    <footer class="site-footer">
-      <div class="footer-brand">
-        <span class="brand-mark" style="font-family:'Cormorant Garamond',serif">Porsche Service</span>
-        <p class="footer-tagline">
-          Независимый сервисный центр<br>
-          для автомобилей Porsche
+      <div class="service-card reveal-up" style="transition-delay: 100ms;">
+        <span class="service-num">02</span>
+        <h3 class="service-name">Диагностика</h3>
+        <p class="service-desc">Полная компьютерная диагностика всех систем автомобиля на фирменном оборудовании PIWIS.
         </p>
       </div>
-
-      <nav aria-label="Разделы сайта">
-        <p class="footer-col-title">Навигация</p>
-        <ul class="footer-links">
-          <li><a href="#">Услуги</a></li>
-          <li><a href="#">Модели</a></li>
-          <li><a href="#">О сервисе</a></li>
-          <li><a href="#">Запчасти</a></li>
-          <li><a href="#">Контакты</a></li>
-        </ul>
-      </nav>
-
-      <div class="footer-contact-block">
-        <p class="footer-col-title">Контакты</p>
-        <a class="footer-phone" href="tel:+74951234567">+7 495 123-45-67</a>
-        <p class="footer-address">
-          Москва, ул. Автозаводская, 14&nbsp;с1<br>
-          Пн–Пт 9:00–20:00 · Сб 10:00–18:00
+      <div class="service-card reveal-up" style="transition-delay: 200ms;">
+        <span class="service-num">03</span>
+        <h3 class="service-name">Двигатель и&nbsp;трансмиссия</h3>
+        <p class="service-desc">Капитальный и текущий ремонт двигателей, КПП PDK, а также систем полного привода PTM.
         </p>
       </div>
-    </footer>
+      <div class="service-card reveal-up" style="transition-delay: 300ms;">
+        <span class="service-num">04</span>
+        <h3 class="service-name">Кузов и&nbsp;детейлинг</h3>
+        <p class="service-desc">Покраска, полировка, нанесение керамического покрытия и защитных плёнок PPF класса люкс.
+        </p>
+      </div>
+    </div>
+  </section>
 
-    <div class="footer-bottom">
-      <span class="footer-copy">© 2026 Porsche Service. Все права защищены.</span>
-      <span class="footer-copy">Независимый центр, не аффилирован с Porsche AG</span>
+  <!-- ─── FOOTER ────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <span class="brand-mark" style="font-family:'Cormorant Garamond',serif">Porsche Service</span>
+      <p class="footer-tagline">
+        Независимый сервисный центр<br>
+        для автомобилей Porsche
+      </p>
     </div>
 
-    <!-- ─── JS ────────────────────────────────────────────── -->
-    <script>
-      const cookieBanner = document.getElementById("cookieBanner");
-      const cookieAccept = document.getElementById("cookieAccept");
-      const cookieReject = document.getElementById("cookieReject");
+    <nav aria-label="Разделы сайта">
+      <p class="footer-col-title">Навигация</p>
+      <ul class="footer-links">
+        <li><a href="#">Услуги</a></li>
+        <li><a href="#">Модели</a></li>
+        <li><a href="#">О сервисе</a></li>
+        <li><a href="#">Запчасти</a></li>
+        <li><a href="#">Контакты</a></li>
+      </ul>
+    </nav>
 
-      const hideCookieBanner = () => {
-        cookieBanner?.setAttribute("hidden", "");
-        window.autostarCookieChoice = null;
-      };
+    <div class="footer-contact-block">
+      <p class="footer-col-title">Контакты</p>
+      <a class="footer-phone" href="tel:+74951234567">+7 495 123-45-67</a>
+      <p class="footer-address">
+        Москва, ул. Автозаводская, 14&nbsp;с1<br>
+        Пн–Пт 9:00–20:00 · Сб 10:00–18:00
+      </p>
+    </div>
+  </footer>
 
-      const acceptCookies = () => {
-        window.autostarCookieChoice = "accepted";
-        hideCookieBanner();
-      };
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Porsche Service. Все права защищены.</span>
+    <span class="footer-copy">Независимый центр, не аффилирован с Porsche AG</span>
+  </div>
 
-      const rejectCookies = () => {
-        window.autostarCookieChoice = "rejected";
-        hideCookieBanner();
-      };
+  <!-- ─── JS ────────────────────────────────────────────── -->
+  <script>
+    const cookieBanner = document.getElementById("cookieBanner");
+    const cookieAccept = document.getElementById("cookieAccept");
+    const cookieReject = document.getElementById("cookieReject");
 
-      cookieAccept?.addEventListener("click", acceptCookies);
-      cookieReject?.addEventListener("click", rejectCookies);
+    const hideCookieBanner = () => {
+      cookieBanner?.setAttribute("hidden", "");
+      window.autostarCookieChoice = null;
+    };
 
-      const modelMap = {
-        taycan: {
-          title:    "Porsche\nTaycan",
-          subtitle: "Электро · Полный привод",
-          features: [
-            "Диагностика электропривода",
-            "Обновление программного обеспечения",
-            "Обслуживание тормозной системы"
-          ]
-        },
-        turbo: {
-          title:    "Porsche 911 Turbo S",
-          subtitle: "Бензин · Полный привод",
-          features: [
-            "Обслуживание двигателя Biturbo",
-            "Настройка PDK трансмиссии",
-            "Проверка системы PDCC"
-          ]
-        },
-        panamera: {
-          title:    "Porsche Panamera",
-          subtitle: "Бензин · Полный привод",
-          features: [
-            "ТО по регламенту Panamera",
-            "Диагностика пневмоподвески",
-            "Обслуживание системы 4WD"
-          ]
-        }
-      };
+    const acceptCookies = () => {
+      window.autostarCookieChoice = "accepted";
+      hideCookieBanner();
+    };
 
-      const carShowroom  = document.getElementById("carShowroom");
-      const slides       = Array.from(document.querySelectorAll(".car-slide"));
-      const carTitle     = document.getElementById("carTitle");
-      const carSubtitle  = document.getElementById("carSubtitle");
-      const carFeatures  = document.getElementById("carFeatures");
-      const carVisual    = document.querySelector(".car-visual");
-      const showroomPrev = document.getElementById("showroomPrev");
-      const showroomNext = document.getElementById("showroomNext");
+    const rejectCookies = () => {
+      window.autostarCookieChoice = "rejected";
+      hideCookieBanner();
+    };
 
-      let activeModelKey = "taycan";
-      let activeIndex    = 0;
-      let rafScroll      = 0;
+    cookieAccept?.addEventListener("click", acceptCookies);
+    cookieReject?.addEventListener("click", rejectCookies);
 
-      const renderFeatures = (key) => {
-        if (!carFeatures || !modelMap[key]) return;
-        carFeatures.innerHTML = modelMap[key].features
-          .map(f => `<li class="car-feature">${f}</li>`)
-          .join("");
-      };
+    const modelMap = {
+      taycan: {
+        title: "Porsche\nTaycan",
+        subtitle: "Электро · Полный привод",
+        features: [
+          "Диагностика электропривода",
+          "Обновление программного обеспечения",
+          "Обслуживание тормозной системы"
+        ]
+      },
+      turbo: {
+        title: "Porsche 911 Turbo S",
+        subtitle: "Бензин · Полный привод",
+        features: [
+          "Обслуживание двигателя Biturbo",
+          "Настройка PDK трансмиссии",
+          "Проверка системы PDCC"
+        ]
+      },
+      panamera: {
+        title: "Porsche Panamera",
+        subtitle: "Бензин · Полный привод",
+        features: [
+          "ТО по регламенту Panamera",
+          "Диагностика пневмоподвески",
+          "Обслуживание системы 4WD"
+        ]
+      }
+    };
 
-      const setActiveSlide = (key) => {
-        if (!modelMap[key] || key === activeModelKey) return;
-        activeModelKey = key;
-        [carTitle, carSubtitle, carFeatures].forEach(el => el && el.classList.add("model-switch-fade"));
+    const carShowroom = document.getElementById("carShowroom");
+    const slides = Array.from(document.querySelectorAll(".car-slide"));
+    const carTitle = document.getElementById("carTitle");
+    const carSubtitle = document.getElementById("carSubtitle");
+    const carFeatures = document.getElementById("carFeatures");
+    const carVisual = document.querySelector(".car-visual");
+    const showroomPrev = document.getElementById("showroomPrev");
+    const showroomNext = document.getElementById("showroomNext");
+
+    let activeModelKey = "taycan";
+    let activeIndex = 0;
+    let rafScroll = 0;
+
+    const renderFeatures = (key) => {
+      if (!carFeatures || !modelMap[key]) return;
+      carFeatures.innerHTML = modelMap[key].features
+        .map(f => `<li class="car-feature">${f}</li>`)
+        .join("");
+    };
+
+    const setActiveSlide = (key) => {
+      if (!modelMap[key] || key === activeModelKey) return;
+      activeModelKey = key;
+      carTitle?.classList.add("model-switch-fade");
+      carSubtitle?.classList.add("model-switch-fade");
+      carFeatures?.classList.add("model-switch-fade");
+
+      setTimeout(() => {
+        carTitle.textContent = modelMap[key].title;
+        carSubtitle.textContent = modelMap[key].subtitle;
+        renderFeatures(key);
+
         setTimeout(() => {
-          carTitle.textContent    = modelMap[key].title;
-          carSubtitle.textContent = modelMap[key].subtitle;
-          renderFeatures(key);
-          [carTitle, carSubtitle, carFeatures].forEach(el => el && el.classList.remove("model-switch-fade"));
-        }, 170);
-      };
+          carTitle?.classList.remove("model-switch-fade");
+        }, 50);
+        setTimeout(() => {
+          carSubtitle?.classList.remove("model-switch-fade");
+        }, 100);
+        setTimeout(() => {
+          carFeatures?.classList.remove("model-switch-fade");
+        }, 150);
+      }, 250);
+    };
 
-      const syncNavState = () => {
-        if (showroomPrev) showroomPrev.disabled = activeIndex <= 0;
-        if (showroomNext) showroomNext.disabled = activeIndex >= slides.length - 1;
-      };
+    const syncNavState = () => {
+      if (showroomPrev) showroomPrev.disabled = activeIndex <= 0;
+      if (showroomNext) showroomNext.disabled = activeIndex >= slides.length - 1;
+    };
 
-      const centerSlide = (slide, behavior = "smooth") => {
-        if (!slide || !carShowroom) return;
-        const targetLeft = slide.offsetLeft - (carShowroom.clientWidth - slide.offsetWidth) / 2;
-        if (behavior === "auto") { carShowroom.scrollLeft = targetLeft; return; }
-        carShowroom.scrollTo({ left: targetLeft, behavior });
-      };
+    const centerSlide = (slide, behavior = "smooth") => {
+      if (!slide || !carShowroom) return;
+      const targetLeft = slide.offsetLeft - (carShowroom.clientWidth - slide.offsetWidth) / 2;
+      if (behavior === "auto") { carShowroom.scrollLeft = targetLeft; return; }
+      carShowroom.scrollTo({ left: targetLeft, behavior });
+    };
 
-      const syncActiveMeta = (slide) => {
-        if (!slide) return;
-        const key = slide.dataset.model;
-        slides.forEach(item => item.classList.toggle("is-active", item === slide));
-        activeIndex = slides.indexOf(slide);
-        setActiveSlide(key);
+    const syncActiveMeta = (slide) => {
+      if (!slide) return;
+      const key = slide.dataset.model;
+      slides.forEach(item => item.classList.toggle("is-active", item === slide));
+      activeIndex = slides.indexOf(slide);
+      setActiveSlide(key);
+      syncNavState();
+    };
+
+    const syncActiveByCenter = () => {
+      if (!carShowroom || !slides.length) return;
+      const centerX = carShowroom.scrollLeft + carShowroom.clientWidth / 2;
+      let nearestSlide = slides[0];
+      let nearestDist = Infinity;
+      slides.forEach(slide => {
+        const d = Math.abs(centerX - (slide.offsetLeft + slide.offsetWidth / 2));
+        if (d < nearestDist) { nearestDist = d; nearestSlide = slide; }
+      });
+      syncActiveMeta(nearestSlide);
+    };
+
+    if (carShowroom) {
+      carShowroom.addEventListener("scroll", () => {
+        if (rafScroll) return;
+        rafScroll = requestAnimationFrame(() => { syncActiveByCenter(); rafScroll = 0; });
+      }, { passive: true });
+
+      setTimeout(() => {
+        const first = slides.find(s => s.dataset.model === "taycan");
+        if (first) centerSlide(first, "auto");
+        syncActiveByCenter();
         syncNavState();
-      };
+        renderFeatures("taycan");
+      }, 0);
 
-      const syncActiveByCenter = () => {
-        if (!carShowroom || !slides.length) return;
-        const centerX = carShowroom.scrollLeft + carShowroom.clientWidth / 2;
-        let nearestSlide = slides[0];
-        let nearestDist  = Infinity;
-        slides.forEach(slide => {
-          const d = Math.abs(centerX - (slide.offsetLeft + slide.offsetWidth / 2));
-          if (d < nearestDist) { nearestDist = d; nearestSlide = slide; }
-        });
-        syncActiveMeta(nearestSlide);
-      };
-
-      if (carShowroom) {
-        carShowroom.addEventListener("scroll", () => {
-          if (rafScroll) return;
-          rafScroll = requestAnimationFrame(() => { syncActiveByCenter(); rafScroll = 0; });
-        }, { passive: true });
-
-        setTimeout(() => {
-          const first = slides.find(s => s.dataset.model === "taycan");
-          if (first) centerSlide(first, "auto");
-          syncActiveByCenter();
-          syncNavState();
-          renderFeatures("taycan");
-        }, 0);
-
-        window.addEventListener("resize", () => {
-          const active = slides[activeIndex];
-          if (active) centerSlide(active, "auto");
-        });
-      }
-
-      if (carVisual) {
-        carVisual.addEventListener("pointermove", e => {
-          const r  = carVisual.getBoundingClientRect();
-          const nx = (e.clientX - r.left) / r.width - 0.5;
-          const ny = (e.clientY - r.top) / r.height - 0.5;
-          carVisual.style.setProperty("--car-parallax-x", `${(nx * 14).toFixed(2)}px`);
-          carVisual.style.setProperty("--car-parallax-y", `${(ny * 10).toFixed(2)}px`);
-        });
-        carVisual.addEventListener("pointerleave", () => {
-          carVisual.style.setProperty("--car-parallax-x", "0px");
-          carVisual.style.setProperty("--car-parallax-y", "0px");
-        });
-      }
-
-      showroomPrev?.addEventListener("click", () => {
-        const target = slides[activeIndex - 1];
-        if (target) centerSlide(target, "smooth");
+      window.addEventListener("resize", () => {
+        const active = slides[activeIndex];
+        if (active) centerSlide(active, "auto");
       });
+    }
 
-      showroomNext?.addEventListener("click", () => {
-        const target = slides[activeIndex + 1];
-        if (target) centerSlide(target, "smooth");
+    if (carVisual) {
+      carVisual.addEventListener("pointermove", e => {
+        const r = carVisual.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width - 0.5;
+        const ny = (e.clientY - r.top) / r.height - 0.5;
+        carVisual.style.setProperty("--car-parallax-x", `${(nx * 14).toFixed(2)}px`);
+        carVisual.style.setProperty("--car-parallax-y", `${(ny * 10).toFixed(2)}px`);
       });
+      carVisual.addEventListener("pointerleave", () => {
+        carVisual.style.setProperty("--car-parallax-x", "0px");
+        carVisual.style.setProperty("--car-parallax-y", "0px");
+      });
+    }
 
-      // Плавное появление картинок при прокрутке
-      const imgObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.remove('scroll-img-hidden');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.15 });
+    showroomPrev?.addEventListener("click", () => {
+      const target = slides[activeIndex - 1];
+      if (target) centerSlide(target, "smooth");
+    });
 
-      document.querySelectorAll('img').forEach(img => {
-        if (!img.closest('.hero')) {
-          img.classList.add('scroll-img-hidden');
-          imgObserver.observe(img);
+    showroomNext?.addEventListener("click", () => {
+      const target = slides[activeIndex + 1];
+      if (target) centerSlide(target, "smooth");
+    });
+
+    // Scroll Reveals
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
         }
       });
-    </script>
-  </body>
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal-up').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Stats Counter
+    const animateValue = (obj, start, end, duration) => {
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const current = Math.floor(progress * (end - start) + start);
+        // Keep the span unit
+        const unit = obj.querySelector('.stat-unit');
+        obj.innerHTML = current + (unit ? unit.outerHTML : '');
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    };
+
+    const statsObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const numbers = entry.target.querySelectorAll('.stat-number');
+          numbers.forEach(num => {
+            const target = parseInt(num.getAttribute('data-target'));
+            animateValue(num, 0, target, 2000);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    const statsGrid = document.querySelector('.stats-grid');
+    if (statsGrid) statsObserver.observe(statsGrid);
+
+    const magneticButtons = document.querySelectorAll('.hero-btn, .select-model-btn');
+
+    // Плавное появление картинок при прокрутке
+    const imgObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove('scroll-img-hidden');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('img').forEach(img => {
+      if (!img.closest('.hero')) {
+        img.classList.add('scroll-img-hidden');
+        imgObserver.observe(img);
+      }
+    });
+  </script>
+</body>
+
 </html>
